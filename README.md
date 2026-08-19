@@ -9,7 +9,7 @@
 
 - 🌱 I’m currently learning **Rust**
 
-- 👨‍💻 All of my projects are available at [https://github.com/wirenux?tab=repositories](https://github.com/wirenux?tab=repositories)
+- 👨‍💻 All of my projects are available at [https://github.wirenux.com](https://github.wirenux.com)
 
 - 📝 I regularly write articles on [blog.wirenux.com](https://blog.wirenux.com)
 
