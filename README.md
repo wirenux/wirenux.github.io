@@ -1,20 +1,41 @@
-<h1 align="center">Hi 👋, I'm Louis Lesniak (@wirenux)</h1>
-<h3 align="center">A passionate developer from France 🇫🇷</h3>
+# Dashboard
 
-<p align="left"> <img src="https://komarev.com/ghpvc/?username=wirenux&label=Profile%20views&color=0e75b6&style=flat" alt="wirenux" /> </p>
+Welcome to the site index. Here is an overview of all documented guides, projects, and articles categorized by section.
 
-<p align="center"> <img src="https://skillicons.dev/icons?i=c,rust,js,html,css,py,github,git,apple,linux"/> </p>
+---
 
-- 🔭 I’m currently working on A lot of things
+### GameBoy Development & Reverse Engineering
 
-- 🌱 I’m currently learning **Rust**
+Everything related to GB/GBC hardware architecture, emulators, and homebrew game development.
 
-- 👨‍💻 All of my projects are available at [https://github.wirenux.com](https://github.wirenux.com)
+| Article / Document | Description |
+| :--- | :--- |
+| [CPU Architecture](GameBoy/Emulator/CPU.md) | Registers, opcode cycles & emulator implementation |
+| [Assembly vs C](GameBoy/Games/ASM-VS-C.md) | Performance & toolchain tradeoffs (GBDK vs SM83 ASM) |
+| [Snake Demake](GameBoy/Games/Snake.md) | Development breakdown of a retro Snake game |
+| [Games Section Overview](GameBoy/Games/README.md) | Index of GameBoy homebrew projects |
+| [Reverse Engineering GBR](GameBoy/Reverse_GBR.md) | Reverse engineering Game Boy RAM / ROM routines |
 
-- 📝 I regularly write articles on [blog.wirenux.com](https://blog.wirenux.com)
+---
 
-- 📫 How to reach me **contact@wirenux.com**
+### 📱 iOS Customization & Profiles
 
-- 🌟 Stardance certificate : https://stardance.hackclub.com/certificate?code=K6N5R5
+Configuration guides, mobile profiles, and visual tweak setup notes.
 
-- 🐧 Linux contribution : https://lore.kernel.org/all/20260128154407.42421-1-louis.lesniak2@gmail.com/
+| Article / Document | Description |
+| :--- | :--- |
+| [Custom Icons Setup](iOS/IconsSetup.md) | Shortcuts, custom icons, and UI setup |
+| <a href="/iOS/Maps.mobileconfig">Maps Configuration Profile</a> | Custom iOS `.mobileconfig` payload |
+
+---
+
+### 🤖 Bot Projects
+
+| Article / Document | Description |
+| :--- | :--- |
+| [TempoBot Documentation](TempoBot/README.md) | Features, setup, and command guide |
+
+---
+
+
+*Last updated: 24-08-2026*

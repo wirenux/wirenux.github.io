@@ -96,7 +96,7 @@ The game uses custom tiles for:
 
 This project is released under the [Unlicense](https://github.com/wirenux/snake-gb/blob/main/UNLICENSE).
 
-**Developed with ❤️ by [@squach90](https://github.com/wirenux)**
+**Developed with ❤️ by [@wirenux](https://github.com/wirenux)**
 
 ---
 

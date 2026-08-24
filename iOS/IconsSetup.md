@@ -23,7 +23,7 @@ To follow this tutorial you need at least those things:
 
 Go to [Base64 converter](https://jam.dev/utilities/image-to-base64) and upload an image, for the test I will upload this one (it's the maps Emojie):
 
-<img src="../blog/Images/iOS/Maps.png" width="130" height="130" />
+<img src="../Images/iOS/Maps.png" width="130" height="130" />
 
 When you put your icon in an converter you will have something that starts like this:
 
@@ -245,7 +245,7 @@ Paste this into a new file named YourPackIcon.mobileconfig
 </plist>
 ```
 
-This is mine [Download Here](iOS/Maps.mobileconfig)
+This is mine <a href="/iOS/Maps.mobileconfig">Download Here</a>
 
 ## Install the `.mobileconfig`
 
