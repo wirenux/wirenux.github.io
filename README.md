@@ -1,6 +1,14 @@
 # Dashboard
 
-Welcome to my blog :hii:. Here is an overview of all documented guides, projects, and articles categorized by section.
+Welcome to my blog :hii:. Here is the dashboard / home page of everything I've done
+
+### 🛰️ Satellite
+
+| Article / Document | Description |
+| :--- | :--- |
+| [METEOR M2-X](Satellite/METEOR_M2-X.md) | Everything I did and how you could get image from space :yay: |
+
+---
 
 ---
 
