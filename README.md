@@ -10,8 +10,6 @@ Welcome to my blog :hii:. Here is the dashboard / home page of everything I've d
 
 ---
 
----
-
 ### GameBoy Development & Reverse Engineering
 
 Everything related to GB/GBC hardware architecture, emulators, and homebrew game development.
