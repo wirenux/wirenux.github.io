@@ -1,6 +1,6 @@
 # Dashboard
 
-Welcome to the site index. Here is an overview of all documented guides, projects, and articles categorized by section.
+Welcome to my blog :hii:. Here is an overview of all documented guides, projects, and articles categorized by section.
 
 ---
 

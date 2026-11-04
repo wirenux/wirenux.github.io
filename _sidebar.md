@@ -1,4 +1,6 @@
-* [Home](/)
+* [🏠 Home](/)
+* [🛰️ Satellite](Satellite/)
+  * [🛰️ METEOR M2-X](Satellite/METEOR_M2-X.md)
 * [🕹️ Game Boy](GameBoy/)
   * [🖥️ Emulator](GameBoy/Emulator/)
     * [⚙️ CPU](GameBoy/Emulator/CPU.md)

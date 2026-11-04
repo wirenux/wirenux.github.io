@@ -1,81 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Wirenux - Blog</title>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="description" content="Description">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  <link rel="stylesheet" href="styles/theme-simple-dark.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
-  <script src="//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.26/dist/lenis.css">
+    <meta charset="UTF-8">
+    <title>Wirenux - Blog</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="Description">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="styles/theme-simple-dark.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.26/dist/lenis.css">
 </head>
 <body>
-  <div id="app"></div>
-  <script>
-    window.$docsify = {
-      name: 'wirenux',
-      repo: '',
-      basePath: '/',
-      loadSidebar: true,
-      search: 'auto',
-      subMaxLevel: 3,
-      sidebarDisplayLevel: 1,
+    <div id="app"></div>
+    <script>
+        const customEmojis = {
+            ':yay:': '_media/gifs/yay.gif',
+            ':loll:': '_media/gifs/loll.gif',
+            ':hii:': '_media/gifs/hii.gif',
+            ':yipee:': '_media/gifs/yipee.webp'
+        };
 
-      search: {
-        noData: 'No Results!',
-        placeholder: 'Search',
-        depth: 2,
-      },
+        window.$docsify = {
+            name: 'wirenux',
+            repo: '',
+            basePath: '/',
+            loadSidebar: true,
+            search: 'auto',
+            subMaxLevel: 3,
+            sidebarDisplayLevel: 1,
 
-      pagination: {
-        crossChapter: true,
-        crossChapterText: true,
-      },
-      plugins: [
-        function(hook, vm) {
-          let lenis;
+            search: {
+                noData: 'No Results!',
+                placeholder: 'Search',
+                depth: 2,
+            },
 
-          hook.doneEach(function() {
-            if (lenis) {
-              lenis.destroy();
-            }
+            pagination: {
+                crossChapter: true,
+                crossChapterText: true,
+            },
+            plugins: [
+                function(hook, vm) {
+                    let lenis;
 
-            lenis = new Lenis({
-              duration: 1.2,
-              easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-              smoothWheel: true,
-            });
+                    hook.doneEach(function() {
+                        if (lenis) {
+                            lenis.destroy();
+                        }
 
-            function raf(time) {
-              lenis.raf(time);
-              requestAnimationFrame(raf);
-            }
+                        lenis = new Lenis({
+                            duration: 1.2,
+                            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                            smoothWheel: true,
+                        });
 
-            requestAnimationFrame(raf);
-          });
+                        function raf(time) {
+                            lenis.raf(time);
+                            requestAnimationFrame(raf);
+                        }
+
+                        requestAnimationFrame(raf);
+                    });
+                },
+                function (hook, vm) {
+                    hook.afterEach(function (html) {
+                        let processedHtml = html;
+
+                        for (const [shortcode, url] of Object.entries(customEmojis)) {
+                            const regex = new RegExp(shortcode.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), 'g');
+                            const imgTag = `<img src="${url}" alt="${shortcode}" class="custom-slack-emoji" />`;
+                            processedHtml = processedHtml.replace(regex, imgTag);
+                        }
+
+                        return processedHtml;
+                    });
+                },
+                function (hook, vm) {
+                    hook.afterEach(function (html) {
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = html;
+
+                        const footnotes = {};
+                        const route = location.hash.split('?')[0] || '#/';
+
+                        // Step 1: pull footnote definitions out of paragraphs
+                        tempDiv.querySelectorAll('p').forEach(p => {
+                            const lines = p.innerHTML.split('\n');
+                            const kept = [];
+                            lines.forEach(line => {
+                                const m = line.match(/^\s*\[\^([^\]\s]+)\]:\s+([\s\S]*)$/);
+                                if (m) footnotes[m[1]] = m[2];
+                                else kept.push(line);
+                            });
+                            if (kept.length !== lines.length) {
+                                if (kept.join('').trim() === '') p.remove();
+                                else p.innerHTML = kept.join('\n');
+                            }
+                        });
+
+                        if (Object.keys(footnotes).length === 0) return tempDiv.innerHTML;
+
+                        // Step 2: replace [^id] references with superscript links (skip code blocks)
+                        const walker = document.createTreeWalker(tempDiv, NodeFilter.SHOW_TEXT);
+                        const nodes = [];
+                        let n;
+                        while ((n = walker.nextNode())) {
+                            if (!n.parentElement.closest('pre, code')) nodes.push(n);
+                        }
+                        nodes.forEach(textNode => {
+                            const text = textNode.nodeValue;
+                            if (!/\[\^[^\]\s]+\]/.test(text)) return;
+                            const tpl = document.createElement('template');
+                            tpl.innerHTML = text.replace(/\[\^([^\]\s]+)\]/g, (m, id) =>
+                                footnotes[id]
+                                    ? `<sup id="fn-ref-${id}"><a href="${route}?id=fn-${id}" class="footnote-ref">[${id}]</a></sup>`
+                                    : m
+                            );
+                            textNode.parentNode.replaceChild(tpl.content, textNode);
+                        });
+
+                        // Step 3: build the footnotes section
+                        const container = document.createElement('div');
+                        container.className = 'footnotes-section';
+
+                        const title = document.createElement('h4');
+                        title.className = 'footnotes-title';
+                        title.textContent = 'Notes';
+
+                        const ol = document.createElement('ol');
+                        ol.className = 'footnotes-list';
+
+                        Object.keys(footnotes)
+                            .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+                            .forEach(id => {
+                                const li = document.createElement('li');
+                                li.id = `fn-${id}`;
+                                li.innerHTML = `${footnotes[id]} <a href="${route}?id=fn-ref-${id}" class="footnote-backref" title="Back to the text">↩</a>`;
+                                ol.appendChild(li);
+                            });
+
+                        container.append(title, ol);
+                        tempDiv.appendChild(container);
+
+                        return tempDiv.innerHTML;
+                    });
+                    hook.doneEach(function () {
+                        // wait a tick so the pagination plugin has inserted its nav
+                        requestAnimationFrame(() => {
+                            const notes = document.querySelector('.footnotes-section');
+                            const nav = document.querySelector('.docsify-pagination-container');
+                            if (notes && nav && nav.parentNode) {
+                                nav.parentNode.insertBefore(notes, nav);
+                            }
+                        });
+                    });
+                }
+            ]
         }
-      ]
-    }
-  </script>
+    </script>
 
-  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
-  <script type="module">
-    import { initCursor } from './cursor.js';
-    initCursor();
-  </script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-latex@0"></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-c.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-asm6502.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-plugin-flexible-alerts"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
-  <script src="https://unpkg.com/lenis@1.3.26/dist/lenis.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify-latex@0"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-c.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-asm6502.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify-plugin-flexible-alerts"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js2" onerror="this.src='//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js'"></script>
+    <script src="https://unpkg.com/lenis@1.3.26/dist/lenis.min.js"></script>
+
+    <script type="module">
+        import { initCursor } from './cursor.js';
+        initCursor();
+    </script>
+    <style>
+        .custom-slack-emoji {
+            height: 1.4em;
+            width: auto;
+            vertical-align: -0.3em;
+            margin: 0 0.1em;
+        }
+        .footnotes-section {
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.85;
+        }
+        .footnotes-title {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .footnotes-list {
+            padding-left: 1.2rem;
+        }
+        .footnotes-list li {
+            margin-bottom: 0.4rem;
+        }
+        .footnote-backref {
+            text-decoration: none;
+            margin-left: 0.3rem;
+        }
+    </style>
 </body>
 </html>
