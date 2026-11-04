@@ -24,7 +24,7 @@ Before showing you how to get those I'll explain the history of the **METEOR M2-
 
 ### The history of **METEOR M2-3** and **M2-4**
 
-**METEOR M2-3** is a **Rusian** weather satellite designed, built by **VNIIEM** and operated by **Roscosmos**. He was launched on **27 June 2023** and transmit data via **LRPT** [^3] and **HRPT**.
+**METEOR M2-3** is a **Russian** weather satellite designed, built by **VNIIEM** and operated by **Roscosmos**. He was launched on **27 June 2023** and transmit data via **LRPT** [^3] and **HRPT**.
 
 **METEOR M2-4** does the same thing and was launched on **29 February 2024**.
 
